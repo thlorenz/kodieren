@@ -10,17 +10,17 @@ Encoding related utilities
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [API](#api)
-  - [dectoen](#dectoen)
-  - [maskForBits](#maskforbits)
-  - [bitsToLayout](#bitstolayout)
-    - [Example:](#example)
-  - [shiftMask](#shiftmask)
-  - [Example](#example)
-  - [isolate](#isolate)
-  - [number](#number)
-  - [bin](#bin)
-- [License](#license)
+-   [API](#api)
+    -   [dectoen](#dectoen)
+    -   [maskForBits](#maskforbits)
+    -   [bitsToLayout](#bitstolayout)
+        -   [Example:](#example)
+    -   [shiftMask](#shiftmask)
+    -   [Example](#example)
+    -   [isolate](#isolate)
+    -   [number](#number)
+    -   [bin](#bin)
+-   [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -112,6 +112,49 @@ Renders a binary representation of the given number padded as specified
 -   `nbits` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** amount of total digits to print (optional, default `32`)
 
 Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the rendered number
+
+### Encoder
+
+Instantiates an encoder that uses the decodeArray to encode/decode to/from.
+
+#### Example
+
+    const decodeArray = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ]
+    const encoder = new Encoder(decodeArray, [ 0, 0b111 ])
+    const encoded = encoder.encode('c')
+    const decoded = encoder.decode(encoded)
+    console.log({ encoded, decoded })
+    // => { encoded: 2, decoded: 'c' }
+
+**Parameters**
+
+-   `decodeArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>** the decode/encode map
+-   `Array.null`  &lt;Number, Number> `[ bitIdx, mask ]` used to isolate values from the given bits
+-   `preEncode` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)?** conversion function run before an item is encoded (optional, default `identity`)
+-   `postDecode` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)?** conversion function run after an item is decoded (optional, default `identity`)
+
+Returns **[Encoder](#encoder)** instance
+
+### Encoder.encode
+
+Encodes the item to bits according to the encoding table derived from the
+decodeArray
+
+**Parameters**
+
+-   `item` **T** item to encode
+
+Returns **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** bits representing the item
+
+### Encoder.decode
+
+Decodes the bits from the decodeArray
+
+**Parameters**
+
+-   `bits` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** bits to decode
+
+Returns **T** the item represented by the bits
 
 ## License
 
