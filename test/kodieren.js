@@ -5,7 +5,13 @@ const spok = require('spok')
 // eslint-disable-next-line no-unused-vars
 const ocat = require('./util/ocat')
 
-const { dectoen, maskForBits, bitsToLayout, shiftMask, isolate } = require('../')
+const {
+    dectoen
+  , maskForBits
+  , bitsToLayout
+  , shiftMask
+  , isolate
+} = require('../')
 
 test('\ndectoen', function(t) {
   const map = dectoen([ 'foo', 'bar', 'foofoo' ])

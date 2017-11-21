@@ -122,6 +122,74 @@ for (var i = 0; i < 1000; i++) {
 function bin(n, nbits = 32) {
   return n.toString(2).padStart(nbits, '0')
 }
+
+//
+// Encoder
+//
+function identity(x) {
+  return x
+}
+
+class Encoder {
+  /**
+   * Instantiates an encoder that uses the decodeArray to encode/decode to/from.
+   *
+   * ### Example
+   *
+   * ```
+   * const decodeArray = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ]
+   * const encoder = new Encoder(decodeArray, [ 0, 0b111 ])
+   * const encoded = encoder.encode('c')
+   * const decoded = encoder.decode(encoded)
+   * console.log({ encoded, decoded })
+   * // => { encoded: 2, decoded: 'c' }
+   * ```
+   *
+   * @name Encoder
+   *
+   * @param {Array.<T>} decodeArray the decode/encode map
+   * @param Array.<Number, Number> `[ bitIdx, mask ]` used to isolate values from the given bits
+   * @param {function}[preEncode=identity] conversion function run before an item is encoded
+   * @param {function}[postDecode=identity] conversion function run after an item is decoded
+   * @returns {Encoder} instance
+   */
+  constructor(decodeArray, [ bitIdx, mask ], preEncode = identity, postDecode = identity) {
+    this._decodeArray = decodeArray
+    this._encodeMap = dectoen(decodeArray)
+    this._bitIdx = bitIdx
+    this._mask = mask
+    this._preEncode = preEncode
+    this._postDecode = postDecode
+  }
+
+  /**
+   * Encodes the item to bits according to the encoding table derived from the
+   * decodeArray
+   *
+   * @name Encoder.encode
+   *
+   * @param {T} item item to encode
+   * @returns {Number} bits representing the item
+   */
+   encode(item) {
+    const encodeIdx = this._encodeMap.get(this._preEncode(item))
+    return encodeIdx << this._bitIdx
+  }
+
+  /**
+   * Decodes the bits from the decodeArray
+   *
+   * @name Encoder.decode
+   *
+   * @param {Number} bits bits to decode
+   * @returns {T} the item represented by the bits
+   */
+  decode(bits) {
+    const decodeIdx = shiftMask(bits, this._bitIdx, this._mask)
+    return this._postDecode(this._decodeArray[decodeIdx])
+  }
+}
+
 module.exports = {
     dectoen
   , number
@@ -130,4 +198,5 @@ module.exports = {
   , maskForBits
   , shiftMask
   , bin
+  , Encoder
 }
