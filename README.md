@@ -70,7 +70,7 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 Righ shifts the given number as specified and then applies the given mask.
 This is useful to isolate information from a bit field.
 
-### Example
+#### Example
 
     shiftMask(0b100010110011, 4, 0b1111)
     => 0b1011
